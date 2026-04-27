@@ -5,6 +5,7 @@ Self-contained HTML presentation slides hosted via **GitHub Pages**. Each subdir
 | Directory | Talk | Date |
 |---|---|---|
 | `cms_tb_meeting_es_2026/` | BTL Time Resolution from Energy Sharing Events (TB Meeting) | Apr 24, 2026 |
+| `hig25006_preapproval/` | HIG-25-006 BSM H→ττ Pre-approval (98 slides) | Apr 27, 2026 |
 
 ## Access
 
@@ -16,6 +17,7 @@ https://ky230.github.io/Html-slides-public/<subdir>/index.html
 
 For example:
 - [cms_tb_meeting_es_2026](https://ky230.github.io/Html-slides-public/cms_tb_meeting_es_2026/index.html)
+- [hig25006_preapproval](https://ky230.github.io/Html-slides-public/hig25006_preapproval/index.html)
 
 ## How to Add a New Talk
 
