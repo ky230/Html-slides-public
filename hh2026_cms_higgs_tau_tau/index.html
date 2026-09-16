@@ -984,15 +984,12 @@
             body > .global-header,
             body > .global-footer,
             body > .global-logos,
-            body > .progress-container,
             #scale-wrapper > .global-header,
             #scale-wrapper > .global-footer,
             #scale-wrapper > .global-logos,
-            #scale-wrapper > .progress-container,
             #globalHeader,
             #globalFooter,
-            #globalLogos,
-            #progressContainer {
+            #globalLogos {
                 display: none !important;
             }
             
@@ -1013,34 +1010,6 @@
                 right: 0 !important;
                 height: calc(var(--header-height) - 4px) !important;
                 z-index: 1001 !important;
-            }
-
-            .local-print-progress {
-                display: flex !important;
-                position: absolute !important;
-                bottom: var(--footer-height) !important;
-                left: 0 !important;
-                width: 1920px !important;
-                height: 4px !important;
-                z-index: 1001 !important;
-                gap: 2px !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            .local-print-progress .progress-segment {
-                flex: 1 !important;
-                height: 100% !important;
-                background: rgba(0, 0, 0, 0.1) !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            .local-print-progress .progress-segment.active {
-                background: var(--theme-progress) !important;
-                box-shadow: none !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
             }
             
             .local-print-footer {
@@ -1068,8 +1037,7 @@
             
             .transition-slide .local-print-header,
             .transition-slide .local-print-logos,
-            .transition-slide .local-print-footer,
-            .transition-slide .local-print-progress {
+            .transition-slide .local-print-footer {
                 display: none !important;
             }
             
@@ -1085,8 +1053,7 @@
         @media screen {
             .local-print-header,
             .local-print-footer,
-            .local-print-logos,
-            .local-print-progress {
+            .local-print-logos {
                 display: none !important;
             }
         }
@@ -3303,7 +3270,7 @@
             }
         }
         // 0. PDF Vector Print Adapter (Self-executing to ensure execution before DOM printing)
-        function setupPrintAdapter() {
+        (() => {
             const slides = document.querySelectorAll('.slide');
             const globalHeader = document.querySelector('.global-header');
             const globalFooter = document.querySelector('.global-footer');
@@ -3313,13 +3280,8 @@
                 return;
             }
             const totalSlides = slides.length;
-            const slidesArr = Array.from(slides);
-            const backUpIndex = slidesArr.findIndex(s => s.classList.contains('transition-slide') && /back\s*up/i.test(s.textContent.trim()));
-            const progressTotal = backUpIndex !== -1 ? backUpIndex : totalSlides;
             
             slides.forEach((slide, index) => {
-                if (slide.querySelector('.local-print-header')) return;
-
                 // 1. Clone Header
                 const localHeader = globalHeader.cloneNode(true);
                 localHeader.removeAttribute('id');
@@ -3329,7 +3291,7 @@
                 const slideTitle = slide.getAttribute('data-title') || "";
                 const headerTextNode = localHeader.querySelector('.header-text') || localHeader.querySelector('#headerText');
                 if (headerTextNode) {
-                    headerTextNode.innerHTML = slideTitle;
+                    headerTextNode.innerText = slideTitle;
                     headerTextNode.removeAttribute('id');
                 }
                 slide.appendChild(localHeader);
@@ -3354,21 +3316,8 @@
                     }
                 }
                 slide.appendChild(localFooter);
-
-                // 4. Create Local Print Progress Bar (Golden progress bar per page)
-                const localProgress = document.createElement('div');
-                localProgress.className = 'progress-container local-print-progress';
-                const activeCount = index + 1;
-                for (let i = 0; i < progressTotal; i++) {
-                    const seg = document.createElement('div');
-                    seg.className = 'progress-segment' + (i < activeCount ? ' active' : '');
-                    localProgress.appendChild(seg);
-                }
-                slide.appendChild(localProgress);
             });
-        }
-        setupPrintAdapter();
-        window.addEventListener('beforeprint', setupPrintAdapter);
+        })();
 
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('progressContainer');
